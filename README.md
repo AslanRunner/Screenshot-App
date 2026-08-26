@@ -1,28 +1,28 @@
-﻿# ScreenSnap Studio — Modular Screenshot, Annotation & Cloud Share Suite
+﻿# ScreenSnap Studio - Modular Screenshot
 
 A modular, developer-grade desktop screenshot suite built with **Python**, **Tkinter**, **Pillow**, **mss**, **pynput**, **requests**, and **pyperclip**.
 
 ---
 
-## 🚀 Key Improvements & Features
+##  Key Improvements & Features
 
-### 1. 🌐 Global Background Hotkeys (Works when Minimized!)
+### 1.  Global Background Hotkeys (Works when Minimized!)
 - **`F1` (Fullscreen Grab)**: Takes a fullscreen screenshot anywhere on your system without needing the application window focused.
 - **`F2` (Interactive Drag-to-Snip Region)**: Freezes the entire screen, dims the surroundings, and lets you drag a rectangular selection box with live pixel dimensions (`W × H`). Releasing the mouse instantly crops and saves the screenshot. Press `Esc` or right-click to cancel.
 
-### 2. ✏️ Rock-Solid Undo, Redo & Reset in Annotator
+### 2.  Rock-Solid Undo, Redo & Reset in Annotator
 - **`↶ Undo (Ctrl+Z)`**: Reverts the last annotation step cleanly across all tools.
 - **`↷ Redo (Ctrl+Y)`**: Re-applies undone annotations.
-- **`🗑️ Reset to Original`**: 1-click reset to discard all edits and start fresh from the original capture.
+- **` Reset to Original`**: 1-click reset to discard all edits and start fresh from the original capture.
 - **Live History Counter**: Shows active undo and redo depth in the status bar.
 - **Tools Included**: Arrow, Rectangle, Circle, Text (with contrast badge), Highlight, Blur / Pixelation.
 
-### 3. ☁️ Instant Cloud Sharing (`tmpfiles.org`)
+### 3.  Instant Cloud Sharing (`tmpfiles.org`)
 - **1-Click & Right-Click Cloud Upload**: Upload any screenshot directly to `tmpfiles.org` (no account/API keys required).
 - **Auto Clipboard Copy**: Automatically copies the direct link (`https://tmpfiles.org/dl/...`) to your clipboard.
-- **Modal Link Dialog**: Share popup dialog with `📋 Copy Direct Link` and `🌐 Open in Browser`.
+- **Modal Link Dialog**: Share popup dialog with ` Copy Direct Link` and ` Open in Browser`.
 
-### 4. 🧩 Clean Modular Architecture
+### 4.  Clean Modular Architecture
 
 ```
 .
@@ -59,7 +59,7 @@ A modular, developer-grade desktop screenshot suite built with **Python**, **Tki
 
 ---
 
-## 💻 Quick Start
+##  Quick Start
 
 ### 1. Install Dependencies
 ```bash
@@ -69,13 +69,11 @@ pip install -r requirements.txt
 ### 2. Run the Application
 ```bash
 python main.py
-# or
-python solution.py
 ```
 
 ---
 
-## ⌨️ Global Shortcuts
+##  Global Shortcuts
 
 | Shortcut | Context | Action |
 | --- | --- | --- |
