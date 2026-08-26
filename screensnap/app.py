@@ -1,6 +1,6 @@
 ﻿"""
 Main Application Controller for ScreenSnap Studio.
-Integrates Gallery, Global Hotkeys (F1, F2), Capture Engine, Snipping Tool & Cloud Sharing.
+Integrates Gallery, Global Hotkeys, Capture Engine, Snipping Tool and Cloud Sharing.
 """
 
 import os
@@ -19,7 +19,7 @@ from screensnap.ui.gallery import GalleryView
 class ScreenSnapApp:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.root.title("ScreenSnap Studio — Desktop Capture & Cloud Share")
+        self.root.title("ScreenSnap - Desktop Capture and Cloud Share")
         self.root.geometry("1140x780")
         self.root.minsize(920, 620)
         self.root.configure(bg=THEME["bg_base"])
@@ -33,7 +33,7 @@ class ScreenSnapApp:
         self.refresh()
 
     def _build_ui(self):
-        # 1. Top Header Bar
+        # Top Header Bar
         header = tk.Frame(self.root, bg=THEME["bg_surface"], height=72)
         header.pack(fill=tk.X, side=tk.TOP)
         header.pack_propagate(False)
@@ -52,7 +52,7 @@ class ScreenSnapApp:
 
         tk.Label(
             brand_box,
-            text="Global Hotkeys: [F1] Fullscreen  •  [F2] Drag-to-Snip Region (Works in Background)",
+            text="Global Hotkeys: F1 Fullscreen | F2 Drag to Snip Region",
             font=(FONT_FAMILY, 8), fg=THEME["text_secondary"], bg=THEME["bg_surface"]
         ).pack(anchor="w", pady=(2, 0))
 
@@ -61,41 +61,41 @@ class ScreenSnapApp:
         btn_box.pack(side=tk.RIGHT, padx=24, pady=16)
 
         tk.Button(
-            btn_box, text="⚡ Fullscreen (F1)", font=(FONT_FAMILY, 9, "bold"),
+            btn_box, text="Fullscreen F1", font=(FONT_FAMILY, 9, "bold"),
             fg=THEME["bg_abyss"], bg=THEME["cyan_electric"], activebackground=THEME["cyan_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=14, pady=7, command=self.trigger_fullscreen_capture
         ).pack(side=tk.LEFT, padx=4)
 
         tk.Button(
-            btn_box, text="🎯 Snip Region (F2)", font=(FONT_FAMILY, 9, "bold"),
+            btn_box, text="Snip Region F2", font=(FONT_FAMILY, 9, "bold"),
             fg=THEME["bg_abyss"], bg=THEME["amber_electric"], activebackground=THEME["amber_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=14, pady=7, command=self.trigger_snipping_tool
         ).pack(side=tk.LEFT, padx=4)
 
         tk.Button(
-            btn_box, text="🔄 Refresh", font=(FONT_FAMILY, 9),
+            btn_box, text="Refresh", font=(FONT_FAMILY, 9),
             fg=THEME["text_primary"], bg=THEME["bg_surface_alt"], activebackground=THEME["bg_surface_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=10, pady=7, command=self.refresh
         ).pack(side=tk.LEFT, padx=4)
 
         tk.Button(
-            btn_box, text="📁 Folder", font=(FONT_FAMILY, 9),
+            btn_box, text="Open Folder", font=(FONT_FAMILY, 9),
             fg=THEME["text_secondary"], bg=THEME["bg_surface_alt"], activebackground=THEME["bg_surface_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=10, pady=7, command=self.open_screenshots_folder
         ).pack(side=tk.LEFT, padx=4)
 
-        # 2. Main Gallery Container
+        # Main Gallery Container
         self.gallery = GalleryView(self.root, self.uploader, status_callback=self.update_status)
         self.gallery.pack(fill=tk.BOTH, expand=True, padx=24, pady=16)
 
-        # 3. Status Bar
+        # Status Bar
         self.status_bar = tk.Frame(self.root, bg=THEME["bg_abyss"], height=34)
         self.status_bar.pack(fill=tk.X, side=tk.BOTTOM)
         self.status_bar.pack_propagate(False)
 
         self.status_lbl = tk.Label(
             self.status_bar,
-            text="Ready. Press F1 (Fullscreen) or F2 (Snip Region) anytime, even when minimized.",
+            text="Ready. Press F1 for Fullscreen or F2 for Region Snip.",
             font=(FONT_FAMILY, 9),
             fg=THEME["text_secondary"],
             bg=THEME["bg_abyss"]
@@ -112,7 +112,6 @@ class ScreenSnapApp:
         self.stats_lbl.pack(side=tk.RIGHT, padx=24, pady=6)
 
     def _init_hotkeys(self):
-        """Initializes global background hotkeys with pynput."""
         self.hotkey_mgr = GlobalHotkeyManager(
             on_f1_fullscreen=lambda: self.root.after(0, self.trigger_fullscreen_capture),
             on_f2_snipping=lambda: self.root.after(0, self.trigger_snipping_tool)
@@ -126,10 +125,8 @@ class ScreenSnapApp:
         count = self.gallery.refresh()
         self.stats_lbl.config(text=f"{count} SCREENSHOTS")
 
-    # ---------------- Capture Actions ----------------
-
     def trigger_fullscreen_capture(self):
-        self.update_status("⚡ Capturing fullscreen...", THEME["cyan_electric"])
+        self.update_status("Capturing fullscreen...", THEME["cyan_electric"])
         self.root.withdraw()
         self.root.after(250, self._do_fullscreen_capture)
 
@@ -137,7 +134,7 @@ class ScreenSnapApp:
         try:
             img, fpath = capture_fullscreen()
             self.refresh()
-            self.update_status(f"✓ Saved: {os.path.basename(fpath)}", THEME["mint_neon"])
+            self.update_status(f"Saved: {os.path.basename(fpath)}", THEME["mint_neon"])
         except Exception as e:
             messagebox.showerror("Error", f"Fullscreen capture error:\n{e}")
         finally:
@@ -145,7 +142,7 @@ class ScreenSnapApp:
             self.root.lift()
 
     def trigger_snipping_tool(self):
-        self.update_status("🎯 Drag mouse to select screen region...", THEME["amber_electric"])
+        self.update_status("Drag mouse to select screen region...", THEME["amber_electric"])
         self.root.withdraw()
         self.root.after(250, self._launch_snipping_overlay)
 
@@ -160,7 +157,7 @@ class ScreenSnapApp:
         self.root.deiconify()
         self.root.lift()
         self.refresh()
-        self.update_status(f"✓ Snip saved: {os.path.basename(fpath)}", THEME["mint_neon"])
+        self.update_status(f"Snip saved: {os.path.basename(fpath)}", THEME["mint_neon"])
 
     def open_screenshots_folder(self):
         if not os.path.exists(SCREENSHOTS_DIR):

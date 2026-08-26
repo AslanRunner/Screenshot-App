@@ -57,14 +57,14 @@ class GalleryView(tk.Frame):
             self, tearoff=0, bg=THEME["bg_surface"], fg=THEME["text_primary"],
             activebackground=THEME["cyan_dim"], activeforeground=THEME["cyan_electric"]
         )
-        self.context_menu.add_command(label="🚀 Share Online (Upload to Cloud)", command=self._ctx_share_online)
-        self.context_menu.add_command(label="✏️ Annotate & Draw", command=self._ctx_open_annotator)
+        self.context_menu.add_command(label="Share Online", command=self._ctx_share_online)
+        self.context_menu.add_command(label="Annotate", command=self._ctx_open_annotator)
         self.context_menu.add_separator()
-        self.context_menu.add_command(label="🔗 Copy Direct Cloud Link", command=self._ctx_copy_link)
-        self.context_menu.add_command(label="📋 Copy Local Path", command=self._ctx_copy_path)
-        self.context_menu.add_command(label="👁️ Open with Default App", command=self._ctx_open_file)
+        self.context_menu.add_command(label="Copy Direct Link", command=self._ctx_copy_link)
+        self.context_menu.add_command(label="Copy Local Path", command=self._ctx_copy_path)
+        self.context_menu.add_command(label="Open File", command=self._ctx_open_file)
         self.context_menu.add_separator()
-        self.context_menu.add_command(label="🗑️ Delete Screenshot", command=self._ctx_delete_file)
+        self.context_menu.add_command(label="Delete", command=self._ctx_delete_file)
 
     def refresh(self):
         for widget in self.gallery_frame.winfo_children():
@@ -94,7 +94,7 @@ class GalleryView(tk.Frame):
             empty_box.pack(fill=tk.BOTH, expand=True)
             tk.Label(
                 empty_box,
-                text="📂 No screenshots in storage\n\n• Press [F1] for Instant Fullscreen Capture\n• Press [F2] and Drag Mouse to Select Any Screen Region",
+                text="No screenshots in storage\n\nPress F1 for Fullscreen Capture or F2 for Region Snip",
                 font=(FONT_FAMILY, 12),
                 fg=THEME["text_muted"],
                 bg=THEME["bg_base"],
@@ -114,14 +114,12 @@ class GalleryView(tk.Frame):
         card = tk.Frame(self.gallery_frame, bg=THEME["bg_surface"], bd=1, relief=tk.SOLID)
         card.pack(fill=tk.X, pady=8, padx=4)
 
-        # Thumbnail
         thumb = self._get_thumbnail(fpath, (150, 95))
         thumb_lbl = tk.Label(card, image=thumb, bg=THEME["bg_canvas"], width=150, height=95, cursor="hand2")
         thumb_lbl.image = thumb
         thumb_lbl.pack(side=tk.LEFT, padx=12, pady=12)
         thumb_lbl.bind("<Double-Button-1>", lambda e, p=fpath: self.open_annotator(p))
 
-        # Metadata column
         info_frame = tk.Frame(card, bg=THEME["bg_surface"])
         info_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=12, pady=12)
 
@@ -133,7 +131,7 @@ class GalleryView(tk.Frame):
 
         if is_shared:
             shared_badge = tk.Label(
-                title_row, text="⚡ SHARED ONLINE", font=(FONT_MONO, 7, "bold"),
+                title_row, text="SHARED", font=(FONT_MONO, 7, "bold"),
                 fg=THEME["mint_text"], bg=THEME["mint_bg"], padx=8, pady=2
             )
             shared_badge.pack(side=tk.LEFT, padx=12)
@@ -144,7 +142,7 @@ class GalleryView(tk.Frame):
         dt_str = datetime.datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
 
         meta_lbl = tk.Label(
-            info_frame, text=f"📅 {dt_str}   •   💾 {size_str}   •   PNG",
+            info_frame, text=f"{dt_str} • {size_str} • PNG",
             font=(FONT_FAMILY, 8), fg=THEME["text_muted"], bg=THEME["bg_surface"]
         )
         meta_lbl.pack(anchor="w", pady=(6, 8))
@@ -154,18 +152,17 @@ class GalleryView(tk.Frame):
             link_box = tk.Frame(info_frame, bg=THEME["bg_surface_alt"], padx=8, pady=3)
             link_box.pack(anchor="w")
 
-            link_txt = tk.Label(link_box, text=f"🔗 {link_url}", font=(FONT_MONO, 8),
+            link_txt = tk.Label(link_box, text=link_url, font=(FONT_MONO, 8),
                                 fg=THEME["cyan_electric"], bg=THEME["bg_surface_alt"], cursor="hand2")
             link_txt.pack(side=tk.LEFT)
             link_txt.bind("<Button-1>", lambda e, url=link_url: self._copy_and_notify_link(url))
 
-        # Actions column
         actions_col = tk.Frame(card, bg=THEME["bg_surface"])
         actions_col.pack(side=tk.RIGHT, padx=16, pady=12)
 
         btn_share = tk.Button(
             actions_col,
-            text="🚀 Share Online" if not is_shared else "📋 Copy Link",
+            text="Share Online" if not is_shared else "Copy Link",
             font=(FONT_FAMILY, 9, "bold"),
             fg=THEME["bg_abyss"] if not is_shared else THEME["mint_text"],
             bg=THEME["cyan_electric"] if not is_shared else THEME["mint_bg"],
@@ -176,7 +173,7 @@ class GalleryView(tk.Frame):
         btn_share.pack(fill=tk.X, pady=3)
 
         btn_edit = tk.Button(
-            actions_col, text="✏️ Annotate", font=(FONT_FAMILY, 8, "bold"),
+            actions_col, text="Annotate", font=(FONT_FAMILY, 8, "bold"),
             fg=THEME["text_primary"], bg=THEME["bg_surface_alt"], activebackground=THEME["bg_surface_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=12, pady=4,
             command=lambda p=fpath: self.open_annotator(p)
@@ -216,7 +213,7 @@ class GalleryView(tk.Frame):
     def upload_and_share(self, fpath: str):
         fname = os.path.basename(fpath)
         if self.status_callback:
-            self.status_callback(f"⚡ Uploading '{fname}' to cloud...", THEME["cyan_electric"])
+            self.status_callback(f"Uploading '{fname}' to cloud...", THEME["cyan_electric"])
 
         def _worker():
             try:
@@ -229,7 +226,7 @@ class GalleryView(tk.Frame):
 
     def _on_upload_success(self, fpath: str, url: str):
         if self.status_callback:
-            self.status_callback("✓ Upload complete! Link copied to clipboard.", THEME["mint_neon"])
+            self.status_callback("Upload complete. Link copied to clipboard.", THEME["mint_neon"])
         self.refresh()
         ShareSuccessModal(self.winfo_toplevel(), fpath, url)
 
@@ -241,7 +238,7 @@ class GalleryView(tk.Frame):
     def _copy_and_notify_link(self, url: str):
         pyperclip.copy(url)
         if self.status_callback:
-            self.status_callback(f"✓ Copied: {url}", THEME["mint_neon"])
+            self.status_callback(f"Link copied: {url}", THEME["mint_neon"])
 
     def open_annotator(self, fpath: str):
         AnnotatorWindow(self.winfo_toplevel(), fpath, on_save_callback=self.refresh)
@@ -264,7 +261,7 @@ class GalleryView(tk.Frame):
         if self.selected_item:
             pyperclip.copy(self.selected_item)
             if self.status_callback:
-                self.status_callback("✓ Local path copied to clipboard!", THEME["cyan_electric"])
+                self.status_callback("Local path copied to clipboard.", THEME["cyan_electric"])
 
     def _ctx_open_file(self):
         if self.selected_item and os.path.exists(self.selected_item):

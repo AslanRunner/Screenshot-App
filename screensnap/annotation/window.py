@@ -1,5 +1,5 @@
 ﻿"""
-Annotation Studio Window with prominent Undo, Redo, Reset, and Tool Palette.
+Annotation Studio Window with Undo, Redo, Reset, and Tool Palette.
 """
 
 import os
@@ -17,7 +17,7 @@ from screensnap.annotation.engine import (
 class AnnotatorWindow(tk.Toplevel):
     def __init__(self, parent, image_path: str, on_save_callback=None):
         super().__init__(parent)
-        self.title(f"ScreenSnap Studio — Annotator: {os.path.basename(image_path)}")
+        self.title(f"ScreenSnap - Annotator: {os.path.basename(image_path)}")
         self.geometry("1140x840")
         self.minsize(920, 640)
         self.image_path = image_path
@@ -51,7 +51,7 @@ class AnnotatorWindow(tk.Toplevel):
         self._load_image()
 
     def _build_ui(self):
-        # 1. Main Toolbar
+        # Main Toolbar
         toolbar = tk.Frame(self, bg=THEME["bg_surface"], height=62)
         toolbar.pack(fill=tk.X, side=tk.TOP, padx=16, pady=(16, 8))
         toolbar.pack_propagate(False)
@@ -61,12 +61,12 @@ class AnnotatorWindow(tk.Toplevel):
 
         self.tool_btns = {}
         tool_items = [
-            ("arrow", "🏹 Arrow"),
-            ("rectangle", "⬜ Rect"),
-            ("circle", "⭕ Circle"),
-            ("text", "🔤 Text"),
-            ("highlight", "🖍️ Highlight"),
-            ("blur", "🌫️ Blur")
+            ("arrow", "Arrow"),
+            ("rectangle", "Rectangle"),
+            ("circle", "Circle"),
+            ("text", "Text"),
+            ("highlight", "Highlight"),
+            ("blur", "Blur")
         ]
 
         for tid, tname in tool_items:
@@ -134,43 +134,40 @@ class AnnotatorWindow(tk.Toplevel):
             self.c_btns.append((col, b))
 
         tk.Button(
-            toolbar, text="🎨", font=(FONT_FAMILY, 9), bg=THEME["bg_surface_alt"], fg=THEME["text_primary"],
-            relief=tk.FLAT, bd=0, cursor="hand2", padx=6, pady=3, command=self.pick_custom_color
+            toolbar, text="Color", font=(FONT_FAMILY, 9), bg=THEME["bg_surface_alt"], fg=THEME["text_primary"],
+            relief=tk.FLAT, bd=0, cursor="hand2", padx=8, pady=3, command=self.pick_custom_color
         ).pack(side=tk.LEFT, padx=(3, 10), pady=14)
 
-        # Right Action Buttons: Save, Reset, Redo, Undo
+        # Right Action Buttons
         btn_save = tk.Button(
-            toolbar, text="💾 Save Annotated", font=(FONT_FAMILY, 9, "bold"),
+            toolbar, text="Save Annotated", font=(FONT_FAMILY, 9, "bold"),
             fg=THEME["bg_abyss"], bg=THEME["cyan_electric"], activebackground=THEME["cyan_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=16, pady=6, command=self.save_annotated
         )
         btn_save.pack(side=tk.RIGHT, padx=(4, 16), pady=12)
 
-        # Clear / Reset Button
         self.btn_reset = tk.Button(
-            toolbar, text="🗑️ Reset", font=(FONT_FAMILY, 8, "bold"),
+            toolbar, text="Reset", font=(FONT_FAMILY, 8, "bold"),
             fg=THEME["rose_neon"], bg=THEME["bg_surface_alt"], activebackground=THEME["rose_bg"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=8, pady=4, command=self.reset_to_original
         )
         self.btn_reset.pack(side=tk.RIGHT, padx=4, pady=14)
 
-        # Redo Button
         self.btn_redo = tk.Button(
-            toolbar, text="↷ Redo (Ctrl+Y)", font=(FONT_FAMILY, 8, "bold"),
+            toolbar, text="Redo Ctrl+Y", font=(FONT_FAMILY, 8, "bold"),
             fg=THEME["text_secondary"], bg=THEME["bg_surface_alt"], activebackground=THEME["bg_surface_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=10, pady=4, command=self.redo
         )
         self.btn_redo.pack(side=tk.RIGHT, padx=4, pady=14)
 
-        # Undo Button
         self.btn_undo = tk.Button(
-            toolbar, text="↶ Undo (Ctrl+Z)", font=(FONT_FAMILY, 8, "bold"),
+            toolbar, text="Undo Ctrl+Z", font=(FONT_FAMILY, 8, "bold"),
             fg=THEME["text_hero"], bg=THEME["bg_surface_alt"], activebackground=THEME["bg_surface_hover"],
             relief=tk.FLAT, bd=0, cursor="hand2", padx=10, pady=4, command=self.undo
         )
         self.btn_undo.pack(side=tk.RIGHT, padx=4, pady=14)
 
-        # 2. Interactive Canvas
+        # Center Canvas
         center = tk.Frame(self, bg=THEME["bg_base"])
         center.pack(fill=tk.BOTH, expand=True, padx=16, pady=(0, 8))
 
@@ -181,7 +178,7 @@ class AnnotatorWindow(tk.Toplevel):
         self.canvas.pack(fill=tk.BOTH, expand=True)
         self.canvas.bind("<Configure>", self._on_resize)
 
-        # 3. Status Bar
+        # Status Bar
         status = tk.Frame(self, bg=THEME["bg_abyss"], height=32)
         status.pack(fill=tk.X, side=tk.BOTTOM)
         status.pack_propagate(False)
@@ -193,13 +190,12 @@ class AnnotatorWindow(tk.Toplevel):
         self.status_lbl.pack(side=tk.LEFT, padx=16, pady=6)
 
         self.history_lbl = tk.Label(
-            status, text="Undo steps: 0 | Redo steps: 0",
+            status, text="Undo: 0 | Redo: 0",
             font=(FONT_MONO, 8, "bold"), fg=THEME["cyan_electric"], bg=THEME["bg_abyss"]
         )
         self.history_lbl.pack(side=tk.RIGHT, padx=16, pady=6)
 
     def _bind_events(self):
-        # Keyboard shortcuts for undo/redo
         for key in ["<Control-z>", "<Control-Z>", "<Control-Key-z>"]:
             self.bind(key, lambda e: self.undo())
         for key in ["<Control-y>", "<Control-Y>", "<Control-Key-y>", "<Control-Shift-Z>", "<Control-Shift-z>"]:
@@ -238,7 +234,7 @@ class AnnotatorWindow(tk.Toplevel):
             self.base_image = self.undo_stack[-1].copy()
             self._update_history_labels()
             self._render()
-            self.status_lbl.config(text="✓ Undone last action.", fg=THEME["cyan_electric"])
+            self.status_lbl.config(text="Undone last action.", fg=THEME["cyan_electric"])
         else:
             self.status_lbl.config(text="Nothing to undo.", fg=THEME["text_muted"])
 
@@ -249,7 +245,7 @@ class AnnotatorWindow(tk.Toplevel):
             self.base_image = restored.copy()
             self._update_history_labels()
             self._render()
-            self.status_lbl.config(text="✓ Redone action.", fg=THEME["cyan_electric"])
+            self.status_lbl.config(text="Redone action.", fg=THEME["cyan_electric"])
         else:
             self.status_lbl.config(text="Nothing to redo.", fg=THEME["text_muted"])
 
@@ -257,14 +253,13 @@ class AnnotatorWindow(tk.Toplevel):
         if messagebox.askyesno("Reset Annotations", "Discard all annotations and reset to original image?", parent=self):
             if self.original_image:
                 self._push_undo(self.original_image.copy())
-                self.status_lbl.config(text="✓ Reset to original image.", fg=THEME["amber_electric"])
+                self.status_lbl.config(text="Reset to original image.", fg=THEME["amber_electric"])
 
     def _update_history_labels(self):
         u_count = max(0, len(self.undo_stack) - 1)
         r_count = len(self.redo_stack)
         self.history_lbl.config(text=f"Undo: {u_count} | Redo: {r_count}")
 
-        # Update button visual state
         self.btn_undo.config(fg=THEME["text_hero"] if u_count > 0 else THEME["text_muted"])
         self.btn_redo.config(fg=THEME["text_hero"] if r_count > 0 else THEME["text_muted"])
 
@@ -384,7 +379,7 @@ class AnnotatorWindow(tk.Toplevel):
             return
 
         self._push_undo(new_img)
-        self.status_lbl.config(text=f"✓ Added {tool.capitalize()}", fg=THEME["mint_neon"])
+        self.status_lbl.config(text=f"Added {tool.capitalize()}", fg=THEME["mint_neon"])
 
     def _add_text(self, cx, cy):
         ix, iy = self._canvas_to_img(cx, cy)
@@ -395,7 +390,7 @@ class AnnotatorWindow(tk.Toplevel):
         pos = (int(ix), int(iy))
         new_img = draw_text_label(self.base_image, pos, text, self.current_color, self.current_thickness)
         self._push_undo(new_img)
-        self.status_lbl.config(text="✓ Added text label", fg=THEME["mint_neon"])
+        self.status_lbl.config(text="Added text label", fg=THEME["mint_neon"])
 
     def save_annotated(self):
         if not self.base_image:

@@ -1,6 +1,19 @@
-# ScreenSnap Studio - Desktop Screenshot
+﻿# ScreenSnap Studio - Desktop Screenshot, Annotation and Cloud Share Suite
 
 A modular desktop screenshot application built with Python, Tkinter, Pillow, mss, pynput, requests, and pyperclip.
+
+---
+
+## Application Showcase
+
+### Main Gallery and Capture Hub
+![ScreenSnap Gallery Hub](assets/gallery_view.png)
+
+### Annotation Studio Interface
+![Annotator Studio](assets/annotator_preview.png)
+
+### Live Annotations and Editing
+![Annotator Tools Drawing](assets/annotator_drawing.png)
 
 ---
 
@@ -41,7 +54,12 @@ A modular desktop screenshot application built with Python, Tkinter, Pillow, mss
 ├── main.py                     # Application entry point
 ├── requirements.txt            # Project dependencies
 ├── README.md                   # Documentation
+├── LICENSE                     # Project license
 ├── Screenshots/                # Output screenshots directory
+├── assets/                     # Application preview images
+│   ├── gallery_view.png
+│   ├── annotator_preview.png
+│   └── annotator_drawing.png
 │
 └── screensnap/                 # Core modular application package
     ├── __init__.py

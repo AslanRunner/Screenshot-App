@@ -1,5 +1,5 @@
 ﻿"""
-Interactive Snipping Tool Overlay (Drag to select region).
+Interactive Snipping Tool Overlay.
 Freezes desktop, dims surroundings, highlights selected rectangle with live dimensions.
 """
 
@@ -15,14 +15,14 @@ class SnippingOverlay(tk.Toplevel):
         super().__init__(parent)
         self.on_complete_callback = on_complete_callback
 
-        # 1. Grab frozen screenshot of screen
+        # Grab frozen screenshot of screen
         self.full_screenshot, self.monitor_info = capture_all_monitors_image()
 
         # Create dimmed background version for outer overlay
         enhancer = ImageEnhance.Brightness(self.full_screenshot)
         self.dimmed_image = enhancer.enhance(0.45)
 
-        # 2. Setup borderless fullscreen window
+        # Setup borderless fullscreen window
         self.overrideredirect(True)
         self.attributes("-topmost", True)
 
@@ -34,17 +34,17 @@ class SnippingOverlay(tk.Toplevel):
         self.geometry(f"{screen_w}x{screen_h}+{screen_x}+{screen_y}")
         self.configure(cursor="crosshair", bg="#000000")
 
-        # 3. Canvas setup
+        # Canvas setup
         self.canvas = tk.Canvas(self, width=screen_w, height=screen_h, highlightthickness=0, bg="#000000")
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
         self.dimmed_photo = ImageTk.PhotoImage(self.dimmed_image)
         self.canvas.create_image(0, 0, image=self.dimmed_photo, anchor=tk.NW, tags="dimmed_bg")
 
-        # Instruction HUD in the center top
+        # Instruction HUD
         self.hud = self.canvas.create_text(
             screen_w // 2, 40,
-            text="🎯 Click & Drag to Select Screen Region  •  Press [ESC] or Right-Click to Cancel",
+            text="Click and drag to select screen region - Press Esc to cancel",
             font=(FONT_MONO, 11, "bold"),
             fill="#FFFFFF"
         )
@@ -83,7 +83,6 @@ class SnippingOverlay(tk.Toplevel):
         if w < 4 or h < 4:
             return
 
-        # Show clear (undimmed) image inside selected box
         box = (min_x, min_y, max_x, max_y)
         cropped_clear = self.full_screenshot.crop(box)
         self.active_crop_photo = ImageTk.PhotoImage(cropped_clear)
@@ -92,17 +91,15 @@ class SnippingOverlay(tk.Toplevel):
             self.canvas.delete(self.active_crop_img_id)
         self.active_crop_img_id = self.canvas.create_image(min_x, min_y, image=self.active_crop_photo, anchor=tk.NW)
 
-        # Draw glowing neon bounding border
         if self.active_rect:
             self.canvas.delete(self.active_rect)
         self.active_rect = self.canvas.create_rectangle(min_x, min_y, max_x, max_y, outline=THEME["cyan_electric"], width=2)
 
-        # Show dimension pill badge
         if self.dim_label_id:
             self.canvas.delete(self.dim_label_id)
         self.dim_label_id = self.canvas.create_text(
             max_x, max_y + 16,
-            text=f"{w} × {h} px",
+            text=f"{w} x {h} px",
             font=(FONT_MONO, 9, "bold"),
             fill=THEME["cyan_electric"],
             anchor=tk.E
