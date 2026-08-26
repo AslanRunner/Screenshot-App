@@ -29,7 +29,6 @@ A modular, developer-grade desktop screenshot suite built with **Python**, **Tki
 ├── main.py                   # Main application entry point
 ├── solution.py               # Compatibility entry point (python solution.py)
 ├── requirements.txt          # Dependencies
-├── README.md                 # Documentation
 │
 └── screensnap/               # Modular application package
     ├── __init__.py
